@@ -9,14 +9,16 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!empty($_POST['titulo']) && !empty($_POST['descricao'])) {
+    if (!empty($_POST['titulo']) && !empty($_POST['descricao']) && isset($_POST['categoria'])) {
         $titulo = $_POST['titulo'];
         $descricao = $_POST['descricao'];
         $usuario_id = $_SESSION['usuario_id'];
+        $categoria = $_POST['categoria'];
 
-        $stmt = $conn->prepare("INSERT INTO receitas (titulo, descricao, usuario_id) VALUES (:titulo, :descricao, :usuario_id)");
+        $stmt = $conn->prepare("INSERT INTO receitas (titulo, descricao, categoria, usuario_id) VALUES (:titulo, :descricao, :categoria, :usuario_id)");
         $stmt->bindParam(':titulo', $titulo);
         $stmt->bindParam(':descricao', $descricao);
+        $stmt->bindParam(':categoria', $categoria);
         $stmt->bindParam(':usuario_id', $usuario_id);
 
         if ($stmt->execute()) {
@@ -39,16 +41,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <h2>Adicionar Receita</h2>
-    <a href="../Menureceitas.php">Voltar ao Dashboard</a>
+    <a href="../Menureceitas.php">Voltar ao Menu</a>
     <?php if (!empty($error)) echo "<p>$error</p>"; ?>
     <form method="post">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" required>
-        <br><br>
-        <label for="descricao">Descrição:</label>
-        <textarea id="descricao" name="descricao" rows="5" required></textarea>
-        <br><br>
-        <button type="submit">Adicionar</button>
-    </form>
+    <label for="titulo">Título:</label>
+    <input type="text" id="titulo" name="titulo" required>
+    <br><br>
+    <label for="descricao">Descrição:</label>
+    <textarea id="descricao" name="descricao" rows="4" required></textarea>
+    <br><br>
+    <label for="categoria">Categoria:</label>
+    <select id="categoria" name="categoria">
+        <option value="Doce">Doce</option>
+        <option value="Salgada">Salgada</option>
+    </select>
+    <br><br>
+    <button type="submit">Salvar Receita</button>
+</form>
+
 </body>
 </html>

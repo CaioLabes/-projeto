@@ -7,13 +7,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $usuario = $_POST['usuario'];
         $senha = $_POST['senha'];
 
-        // Prepare a consulta
+        // consulta
         $stmt = $conn->prepare("SELECT * FROM usuarios WHERE usuario = :usuario");
         $stmt->bindParam(':usuario', $usuario);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        // informações do usuário e senha
+        //echo "Usuário digitado: $usuario<br>";
+        //echo "Senha digitada: $senha<br>";
+
         if ($user) {
+            // informações do usuário encontrado no banco
+           // var_dump($user);
             if (password_verify($senha, $user['senha'])) {
                 $_SESSION['usuario'] = $user['usuario'];
                 $_SESSION['usuario_id'] = $user['cod'];
