@@ -7,35 +7,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $usuario = $_POST['usuario'];
         $senha = $_POST['senha'];
 
-        // consulta
-        $stmt = $conn->prepare("SELECT * FROM usuarios WHERE usuario = :usuario");
-        $stmt->bindParam(':usuario', $usuario);
+        $stmt = $conexao->prepare("SELECT * FROM usuarios WHERE usuario = ?");
+        $stmt->bind_param("s", $usuario);
         $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $resultado = $stmt->get_result();
+        $usuarioDados = $resultado->fetch_assoc();
 
-        // informações do usuário e senha
-        //echo "Usuário digitado: $usuario<br>";
-        //echo "Senha digitada: $senha<br>";
-
-        if ($user) {
-            // informações do usuário encontrado no banco
-           // var_dump($user);
-            if (password_verify($senha, $user['senha'])) {
-                $_SESSION['usuario'] = $user['usuario'];
-                $_SESSION['usuario_id'] = $user['cod'];
-                header('Location: Menureceitas.php');
-                exit();
-            } else {
-                $error = "Senha inválida.";
-            }
+        if ($usuarioDados && password_verify($senha, $usuarioDados['senha'])) {
+            $_SESSION['usuario'] = $usuarioDados['usuario'];
+            $_SESSION['usuario_id'] = $usuarioDados['cod'];
+            header('Location: Menureceitas.php');
+            exit();
         } else {
-            $error = "Usuário não encontrado.";
+            $erro = "Usuário ou senha inválidos.";
         }
+
+        $stmt->close();
     } else {
-        $error = "Por favor, preencha todos os campos.";
+        $erro = "Por favor, preencha todos os campos.";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -46,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <form method="post">
         <h2>Login</h2>
-        <?php if (!empty($error)) echo "<p>$error</p>"; ?>
+        <?php if (!empty($erro)) echo "<p>$erro</p>"; ?>
         <label for="usuario">Usuário:</label>
         <input type="text" id="usuario" name="usuario" required>
         <label for="senha">Senha:</label>

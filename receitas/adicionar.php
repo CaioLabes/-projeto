@@ -2,33 +2,33 @@
 session_start();
 require '../Banco.php';
 
-// Verificar se o usuário está logado
 if (!isset($_SESSION['usuario'])) {
-    header('Location: Login.php');
+    header('Location: ../login.php');
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (!empty($_POST['titulo']) && !empty($_POST['descricao']) && isset($_POST['categoria'])) {
+    if (!empty($_POST['titulo']) && !empty($_POST['descricao']) && !empty($_POST['categoria'])) {
         $titulo = $_POST['titulo'];
         $descricao = $_POST['descricao'];
-        $usuario_id = $_SESSION['usuario_id'];
         $categoria = $_POST['categoria'];
+        $usuario_id = $_SESSION['usuario_id'];
 
-        $stmt = $conn->prepare("INSERT INTO receitas (titulo, descricao, categoria, usuario_id) VALUES (:titulo, :descricao, :categoria, :usuario_id)");
-        $stmt->bindParam(':titulo', $titulo);
-        $stmt->bindParam(':descricao', $descricao);
-        $stmt->bindParam(':categoria', $categoria);
-        $stmt->bindParam(':usuario_id', $usuario_id);
+        $stmt = $conexao->prepare("INSERT INTO receitas (titulo, descricao, categoria, usuario_id) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("sssi", $titulo, $descricao, $categoria, $usuario_id);
 
         if ($stmt->execute()) {
             header('Location: ver.php');
             exit();
         } else {
-            $error = "Erro ao adicionar receita.";
+            $erro = "Erro ao adicionar receita.";
+            echo $erro;
         }
+
+        $stmt->close();
     } else {
-        $error = "Por favor, preencha todos os campos.";
+        $erro = "Por favor, preencha todos os campos.";
+        echo $erro;
     }
 }
 ?>
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <h2>Adicionar Receita</h2>
     <a href="../Menureceitas.php">Voltar ao Menu</a>
-    <?php if (!empty($error)) echo "<p>$error</p>"; ?>
+    <?php if (!empty($erro)) echo "<p>$erro</p>"; ?>
     <form method="post">
     <label for="titulo">Título:</label>
     <input type="text" id="titulo" name="titulo" required>

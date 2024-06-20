@@ -2,52 +2,49 @@
 session_start();
 require '../Banco.php';
 
-// Verificar se o usuário está logado
 if (!isset($_SESSION['usuario'])) {
-    header('Location: login.php');
+    header('Location: ../login.php');
     exit();
 }
 
-// Definir a consulta padrão
 $sql = "SELECT r.id, r.titulo, r.descricao, r.categoria, u.nome AS autor 
         FROM receitas r 
         JOIN usuarios u ON r.usuario_id = u.cod";
 
+$condicao = [];
+$parametro = [];
+
 // Verificar se o usuário quer ver apenas suas receitas ou todas
 if (isset($_GET['ver_todas']) && $_GET['ver_todas'] == 'todas') {
-    
+    // Visualizar todas as receitas
 } else {
-    // Se estiver visualizando apenas suas receitas
-    $usuario_id = $_SESSION['usuario_id'];
-    $sql .= " WHERE r.usuario_id = :usuario_id";
+    // Visualizar apenas minhas receitas
+    $condicao[] = "r.usuario_id = ?";
+    $parametro[] = $_SESSION['usuario_id'];
 }
 
 // Verificar e aplicar filtro por categoria
-if (isset($_GET['filtro_categoria'])) {
-    $filtro = $_GET['filtro_categoria'];
-    if ($filtro == 'doce' || $filtro == 'salgada') {
-        if (strpos($sql, 'WHERE') === false) {
-            $sql .= " WHERE r.categoria = :categoria";
-        } else {
-            $sql .= " AND r.categoria = :categoria";
-        }
-    }
+if (isset($_GET['filtro_categoria']) && ($_GET['filtro_categoria'] == 'doce' || $_GET['filtro_categoria'] == 'salgada')) {
+    $condicao[] = "r.categoria = ?";
+    $parametro[] = $_GET['filtro_categoria'];
 }
 
-$stmt = $conn->prepare($sql);
-
-//parâmetros se houver filtro de categoria
-if (isset($filtro) && ($filtro == 'doce' || $filtro == 'salgada')) {
-    $stmt->bindParam(':categoria', $filtro);
+// Adicionar as condições na consulta
+if (!empty($condicao)) {
+    $sql .= " WHERE " . implode(" AND ", $condicao);
 }
 
-//parâmetro de usuario se estiver visualizando apenas suas receitas
-if (isset($_SESSION['usuario_id']) && isset($_GET['ver_todas']) && $_GET['ver_todas'] != 'todas') {
-    $stmt->bindParam(':usuario_id', $usuario_id);
+$stmt = $conexao->prepare($sql);
+
+// Vincular os parâmetros
+if (!empty($parametro)) {
+    $types = str_repeat('s', count($parametro));
+    $stmt->bind_param($types, ...$parametro);
 }
 
 $stmt->execute();
-$receitas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$resultado = $stmt->get_result();
+$receitas = $resultado->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>

@@ -7,28 +7,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $nome = $_POST['nome'];
         $senha = password_hash($_POST['senha'], PASSWORD_BCRYPT);
 
-        $stmt = $conn->prepare("INSERT INTO usuarios (usuario, nome, senha) VALUES (:usuario, :nome, :senha)");
-        $stmt->bindParam(':usuario', $usuario);
-        $stmt->bindParam(':nome', $nome);
-        $stmt->bindParam(':senha', $senha);
+        $stmt = $conexao->prepare("INSERT INTO usuarios (usuario, nome, senha) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $usuario, $nome, $senha);
 
         if ($stmt->execute()) {
-            echo "Registro realizado com sucesso!<br>";
-            echo "Usuário: $usuario<br>";
-            echo "Nome: $nome<br>";
-            echo "Senha (hash): $senha<br>";
-            header('Location: Login.php');
+            header('Location: login.php');
             exit();
         } else {
-            $error = "Erro ao registrar.";
-            echo $error;
+            $erro = "Erro ao registrar.";
+            echo $erro;
         }
+
+        $stmt->close();
     } else {
-        $error = "Por favor, preencha todos os campos.";
-        echo $error;
+        $erro = "Por favor, preencha todos os campos.";
+        echo $erro;
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -40,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <form method="post">
         <h2>Registrar</h2>
-        <?php if (!empty($error)) echo "<p>$error</p>"; ?>
+        <?php if (!empty($erro)) echo "<p>$erro</p>"; ?>
         <label for="usuario">Usuário:</label>
         <input type="text" id="usuario" name="usuario" required>
         <label for="nome">Nome:</label>
