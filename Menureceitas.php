@@ -19,9 +19,9 @@ if (!isset($_SESSION['usuario'])) {
     <h2>Bem-vindo, <?php echo htmlspecialchars($_SESSION['usuario']); ?>!</h2>
     <nav>
         <ul>
-            <li><a href="../!projeto/receitas/adicionar.php">Adicionar Receita</a></li>
-            <li><a href="../!projeto/receitas/ver.php?ver_todas=minhas">Ver Minhas Receitas</a></li>
-            <li><a href="../!projeto/receitas/ver.php?ver_todas=todas">Ver Todas as Receitas</a></li>
+            <li><a href="receitas/adicionar.php">Adicionar Receita</a></li>
+            <li><a href="receitas/ver.php?ver_todas=minhas">Ver Minhas Receitas</a></li>
+            <li><a href="receitas/ver.php?ver_todas=todas">Ver Todas as Receitas</a></li>
             <li><a href="logout.php">Logout</a></li>
         </ul>
     </nav>
