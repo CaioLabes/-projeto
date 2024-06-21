@@ -1,0 +1,115 @@
+body {
+    background-color: #A7727D;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    background-color: #F8EAD8;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 100%;
+    margin-top: 20px;
+    overflow-y: hidden;
+}
+
+h2 {
+    color: #A7727D;
+    margin-bottom: 20px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #A7727D;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.back-link i {
+    margin-right: 5px;
+}
+
+.back-link:hover {
+    color: #935f6d;
+}
+
+.filter-form {
+    position: sticky;
+    top: 20px;
+    left: 20px;
+    background-color: #ffffff;
+    padding: 10px;
+    margin-bottom: 20px;
+    z-index: 1000;
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #666;
+    text-align: left;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.button {
+    background-color: #A7727D;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #935f6d;
+}
+
+.receitas-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.receita-item {
+    background-color: #EDDBC7;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.receita-item h3 {
+    color: #A7727D;
+    margin-bottom: 5px;
+}
+
+.receita-item p {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.receita-item em {
+    color: #666;
+}

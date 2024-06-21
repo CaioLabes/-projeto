@@ -29,22 +29,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/stylelogin.css">
 </head>
 <body>
-    <form method="post">
-        <h2>Login</h2>
-        <?php if (!empty($erro)) echo "<p>$erro</p>"; ?>
-        <label for="usuario">Usuário:</label>
-        <input type="text" id="usuario" name="usuario" required>
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" required>
-        <button type="submit">Entrar</button>
-    </form>
+    <div class="login-container">
+        <form method="post">
+            <h2>Login</h2>
+            <?php if (!empty($erro)) echo "<p class='error'>$erro</p>"; ?>
+            <div class="input-group">
+                <label for="usuario"></label>
+                <div class="input-wrapper">
+                    <i class="bi bi-person"></i>
+                    <input type="text" id="usuario" name="usuario" placeholder="Usuário" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="senha"></label>
+                <div class="input-wrapper">
+                    <i class="bi bi-lock"></i>
+                    <input type="password" id="senha" name="senha" placeholder="Senha" required>
+                </div>
+            </div>
+            <button type="submit" class="button">Entrar</button>
+        </form>
+    </div>
 </body>
 </html>
